@@ -31,7 +31,7 @@ With UpSkillr, we empower individuals to exchange their expertise without needin
   
 ## Monetization Potential
 
-- While UpSkillr will remain free to use, the future could bring:
+~ While UpSkillr will remain free to use, the future could bring:
 
  **Premium Membership**: Access to advanced matching or priority listings.
  
