@@ -12,7 +12,7 @@ Learning new skills is often locked behind paywalls, creating financial barriers
 
 With UpSkillr, we empower individuals to exchange their expertise without needing money. Users can list the skills they can teach, the skills they want to learn, and find like-minded people to trade knowledge.
 
-- Free Learning: Learn anything without spending a dime—just trade what you know.
+- Free Learning: Learn anything without spending a dime,just trade what you know.
 - Skill Sharing: Everyone has something to offer. Whether it's professional or personal, UpSkillr is for anyone.
 - Building a Community: This isn’t just about learning. It’s about fostering a community of learners and teachers who help each other grow.
 
