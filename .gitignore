@@ -1,0 +1,31 @@
+# Python related
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+env/
+venv/
+instance/
+.flaskenv
+*.db
+*.sqlite3
+*.log
+.idea/
+.vscode/
+
+# Flask migrations
+migrations/
+
+# React related
+node_modules/
+build/
+*.log
+*.env
+*.DS_Store
+
+# IDE/Editor related
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
