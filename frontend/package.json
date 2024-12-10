@@ -7,8 +7,10 @@
     "cra-template": "1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.0.2",
     "react-scripts": "5.0.1",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "web-vitals": "^4.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,5 +35,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
+    "babel-loader": "^9.2.1"
   }
 }

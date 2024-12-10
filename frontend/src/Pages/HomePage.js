@@ -1,14 +1,14 @@
-// import React from 'react';
+import React from 'react';
+import './HomePage.css'; // Styling for the homepage
 
-// function HomePage() {
-//     return (
-//         <div>
-//             <h1>Welcome to UpSkillr</h1>
-//             <p>Discover, learn, and share skills for free.</p>
-//     </div>
-//     );
-// }
+const HomePage = () => {
+return (
+    <div className="homepage-container">
+        <h1>Welcome to UpSkillr</h1>
+        <p>Your go-to platform for learning and connections.</p>
+        <a href="/signup" className="cta-button">Get Started</a>
+    </div>
+    );
+};
 
-// export default HomePage;
-
-//FETCH ANY REQUIRED DATA FROM '/api/home' once available.
+export default HomePage;
