@@ -1,9 +1,11 @@
+@import './styles/variables.css';
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: var(--font-family);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #f4f4f4;
+  background-color: var(--background-color);
 }
 
 h1, h2, h3, p {
