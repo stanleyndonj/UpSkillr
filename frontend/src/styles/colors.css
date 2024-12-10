@@ -1,7 +1,9 @@
 :root {
-    --primary-color: #4CAF50;
-    --secondary-color: #FF5722;
-    --background-color: #F5F5F5;
-    --text-color: #212121;
-    --light-gray: #E0E0E0;
-    }
+
+    --primary-color: #00B8D4; /* Turquoise */
+    --secondary-color: #0288D1; /* Deep Blue */
+    --accent-color: #80DEEA;   /* Light Cyan */
+    --background-color: #E1F5FE; /* Light Blue */
+    --text-color: #01579B;     /* Dark Blue */
+
+}
