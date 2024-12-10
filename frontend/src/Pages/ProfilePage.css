@@ -1,0 +1,17 @@
+.profile-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.profile-details {
+    background: #f9f9f9;
+    padding: 20px;
+    margin: 20px auto;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.error {
+    color: red;
+}

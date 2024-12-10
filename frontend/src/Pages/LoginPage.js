@@ -37,7 +37,7 @@ function LoginPage() {
             <input 
                 type="password"
                 placeholder="Password"
-                value={email}
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
             />
@@ -46,7 +46,7 @@ function LoginPage() {
             </form>
         </div>
     )
-
+}
 export default LoginPage;
 
     // NOTE FOR THE TEAM:
