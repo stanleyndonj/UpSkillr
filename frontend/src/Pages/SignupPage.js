@@ -1,6 +1,7 @@
 // src/pages/Signup.js
 import React ,{ useState } from 'react';
 import axios from 'axios';
+import styles from './SignupPage.module.css';
 import {useNavigate} from 'react-router-dom';
 
 function SignupPage(){
@@ -21,9 +22,9 @@ function SignupPage(){
     }
 
     return (
-        <div className = "signup-page">
+        <div className = {styles.signupPage}>
             <h2>Signup</h2>
-            <form onSubmit={handleSignup}>
+            <form  className={styles.form} onSubmit={handleSignup}>
             <input 
                 type="name"
                 placeholder="name"
@@ -46,7 +47,7 @@ function SignupPage(){
                 required
             />
             <button type="submit">Signup</button>
-            {error && <p className="error">{error}</p>}
+            {error && <p className={styles.error}>{error}</p>}
             </form>
         </div>
     )
