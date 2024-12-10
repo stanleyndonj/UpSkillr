@@ -1,6 +1,8 @@
 // src /pages/LoginPage.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import styles from './LoginPage.module.css';
+
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
@@ -22,9 +24,9 @@ function LoginPage() {
     }
     
     return (
-        <div className = "login-page">
+        <div className = "styles.loginPage">
             <h2>Login</h2>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleLogin} className={styles.form}>
             <input 
                 type="email"
                 placeholder="Email"
@@ -40,7 +42,7 @@ function LoginPage() {
                 required
             />
             <button type="submit">Login</button>
-            {error && <p className="error">{error}</p>}
+            {error && <p className={styles.error}>{error}</p>}
             </form>
         </div>
     )
