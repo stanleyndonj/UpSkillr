@@ -1,0 +1,41 @@
+.loginPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: var(--background-color);
+}
+
+.form {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--light-gray);
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+}
+
+@media (min-width: 600px) {
+    .loginPage {
+        padding: 1rem;
+    }
+
+    .form{
+        width: 100%;
+        padding: 1.5rem;
+    }
+    input {
+        font-size: 1rem;
+    }
+}

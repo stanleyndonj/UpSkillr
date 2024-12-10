@@ -1,23 +1,60 @@
-// import React from 'react';
+// src/pages/Signup.js
+import React ,{ useState } from 'react';
+import axios from 'axios';
+import styles from './SignupPage.module.css';
+import {useNavigate} from 'react-router-dom';
 
-// function SignupPage() {
-//     return (
-//         <div>
-//             <h1>Sign Up</h1>
-//             <form>
-//                 <label htmlFor="name">Name:</label>
-//                 <input type="text" id="name" name="name" placeholder="Enter your name" />
-//                 <label htmlFor="email">Email:</label>
-//                 <input type="email" id="email" name="email" placeholder="Enter your email" />
-//                 <label htmlFor="password">Password:</label>
-//                 <input type="password" id="password" name="password" placeholder="Create a password" />
-//                 <button type="submit">Sign Up</button>
-//             </form>
-//         </div>
-//     );
-// }
+function SignupPage(){
+    const [name,setName]=useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-// export default SignupPage;
+    async function handleSignup(event) {
+        event.preventDefault();
+        try {
+            await axios.post('http://localhost:5000/auth/signup', { email, password });
+            navigate('/login');//Redirect to login or another page
+        } catch (error) {
+            setError(error.response?.data?.message || 'Signup Failed');
+        }
+    }
+
+    return (
+        <div className = {styles.signupPage}>
+            <h2>Signup</h2>
+            <form  className={styles.form} onSubmit={handleSignup}>
+            <input 
+                type="name"
+                placeholder="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+            />
+            <input 
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+            />
+            <input 
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+            />
+            <button type="submit">Signup</button>
+            {error && <p className={styles.error}>{error}</p>}
+            </form>
+        </div>
+    )
+}
+
+export default SignupPage;
+
 
 // NOTE FOR THE TEAM:
 // - Integrate the form with a post request to '/auth/signup' when the backend is ready
