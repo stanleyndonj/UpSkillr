@@ -3,8 +3,7 @@ from faker import Faker
 from models import db, User, Review, Message
 from app import create_app
 
-# Initialize the app and database
-app = create_app()
+# Initialize Faker
 fake = Faker()
 
 # Number of records to generate
@@ -13,7 +12,6 @@ NUM_REVIEWS = 100
 NUM_MESSAGES = 200
 
 def seed_users():
-    """Seed the User table."""
     users = []
     for _ in range(NUM_USERS):
         skills_offered = ', '.join(fake.words(nb=3))  # Generate 3 random skills
@@ -31,7 +29,6 @@ def seed_users():
     print(f"Seeded {NUM_USERS} users.")
 
 def seed_reviews():
-    """Seed the Review table."""
     users = User.query.all()
     reviews = []
     for _ in range(NUM_REVIEWS):
@@ -47,7 +44,6 @@ def seed_reviews():
     print(f"Seeded {NUM_REVIEWS} reviews.")
 
 def seed_messages():
-    """Seed the Message table."""
     users = User.query.all()
     messages = []
     for _ in range(NUM_MESSAGES):
@@ -58,7 +54,7 @@ def seed_messages():
         message = Message(
             sender_id=sender.id,
             receiver_id=receiver.id,
-            content=fake.text(max_nb_chars=200),  # Message with up to 200 characters
+            content=fake.text(max_nb_chars=200),
         )
         messages.append(message)
     db.session.bulk_save_objects(messages)
@@ -66,6 +62,7 @@ def seed_messages():
     print(f"Seeded {NUM_MESSAGES} messages.")
 
 if __name__ == "__main__":
+    app = create_app()
     with app.app_context():
         print("Seeding the database...")
         db.drop_all()  # Clear the database
@@ -74,4 +71,3 @@ if __name__ == "__main__":
         seed_reviews()
         seed_messages()
         print("Database seeding completed.")
-        print("App context active:", app.app_context().push())
