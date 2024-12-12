@@ -10,6 +10,8 @@ class User(db.Model):
     skills_offered = db.Column(db.Text)
     skills_requested = db.Column(db.Text)
     ratings = db.relationship('Review', backref='user', lazy=True)
+    sent_messages = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', lazy=True)
+    received_messages = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', lazy=True)
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)

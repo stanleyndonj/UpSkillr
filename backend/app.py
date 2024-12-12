@@ -6,6 +6,8 @@ from models import db
 from routes.auth_routes import auth_blueprint
 from routes.user_routes import user_blueprint
 from routes.message_routes import message_blueprint
+from routes.review_routes import review_blueprint
+from routes.match_routes import match_blueprint
 
 # Initialize Flask extensions
 migrate = Migrate()
@@ -24,6 +26,8 @@ def create_app():
     app.register_blueprint(auth_blueprint, url_prefix="/api/auth")
     app.register_blueprint(user_blueprint, url_prefix="/api/users")
     app.register_blueprint(message_blueprint, url_prefix="/api/messages")
+    app.register_blueprint(review_blueprint, url_prefix="/api/reviews")
+    app.register_blueprint(match_blueprint, url_prefix="/api/matches")
 
     return app
 
