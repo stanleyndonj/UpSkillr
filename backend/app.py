@@ -1,36 +1,71 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, jsonify, request, session
 from flask_migrate import Migrate
-from flask_socketio import SocketIO
-from models import db
-from routes.auth_routes import auth_blueprint
-from routes.user_routes import user_blueprint
-from routes.message_routes import message_blueprint
-from routes.review_routes import review_blueprint
-from routes.match_routes import match_blueprint
+from flask_bcrypt import Bcrypt
+from models import db, User, Skill, SkillRequest
 
-# Initialize Flask extensions
-migrate = Migrate()
-socketio = SocketIO()
+# Initialize app and extensions
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'super_secret_key'
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object('config.Config')
+db.init_app(app)
+migrate = Migrate(app, db)
+bcrypt = Bcrypt(app)
 
-    # Initialize extensions
-    db.init_app(app)
-    migrate.init_app(app, db)
-    socketio.init_app(app)
+# User registration
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username, email, password = data.get('username'), data.get('email'), data.get('password')
+    if not username or not email or not password:
+        return jsonify({'error': 'Missing required fields'}), 400
 
-    # Register blueprints
-    app.register_blueprint(auth_blueprint, url_prefix="/api/auth")
-    app.register_blueprint(user_blueprint, url_prefix="/api/users")
-    app.register_blueprint(message_blueprint, url_prefix="/api/messages")
-    app.register_blueprint(review_blueprint, url_prefix="/api/reviews")
-    app.register_blueprint(match_blueprint, url_prefix="/api/matches")
+    user = User(username=username, email=email)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'message': 'User created successfully'}), 201
 
-    return app
+# User login
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email, password = data.get('email'), data.get('password')
+    user = User.query.filter_by(email=email).first()
+    if user and user.check_password(password):
+        session['user_id'] = user.id
+        return jsonify({'message': 'Login successful'}), 200
+    return jsonify({'error': 'Invalid credentials'}), 401
 
-if __name__ == "__main__":
-    app = create_app()
-    socketio.run(app, debug=True)
+# Protected route example
+@app.route('/protected', methods=['GET'])
+def protected():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Unauthorized access'}), 401
+    return jsonify({'message': 'Welcome to the protected route'}), 200
+
+# CRUD for Skills
+@app.route('/skills', methods=['GET', 'POST'])
+def skills():
+    if request.method == 'GET':
+        skills = Skill.query.all()
+        return jsonify([{'id': s.id, 'name': s.name, 'user_id': s.user_id} for s in skills]), 200
+    if request.method == 'POST':
+        data = request.get_json()
+        name, user_id = data.get('name'), data.get('user_id')
+        if not name or not user_id:
+            return jsonify({'error': 'Missing required fields'}), 400
+        skill = Skill(name=name, user_id=user_id)
+        db.session.add(skill)
+        db.session.commit()
+        return jsonify({'message': 'Skill added successfully'}), 201
+
+# Logout
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({'message': 'Logged out successfully'}), 200
+
+if __name__ == '__main__':
+    app.run(debug=True)
