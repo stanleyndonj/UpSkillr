@@ -1,7 +1,8 @@
 import random
 from faker import Faker
-from models import db, User, Review, Message
+from models import db, User, Review, Message, Skill, SkillRequest
 from app import create_app
+from sqlalchemy.exc import IntegrityError
 
 # Initialize Faker
 fake = Faker()
@@ -14,60 +15,121 @@ NUM_MESSAGES = 200
 def seed_users():
     users = []
     for _ in range(NUM_USERS):
-        skills_offered = ', '.join(fake.words(nb=3))  # Generate 3 random skills
-        skills_requested = ', '.join(fake.words(nb=2))  # Generate 2 random skills
+        # Create the user first
         user = User(
-            username=fake.user_name(),
-            email=fake.email(),
-            password_hash=fake.password(),
-            skills_offered=skills_offered,
-            skills_requested=skills_requested,
+            username=fake.unique.user_name(),
+            email=fake.unique.email(),
         )
+        user.set_password(fake.password())
+        
+        # Add user to the session
+        db.session.add(user)
+        
+        try:
+            db.session.flush()  # Ensure user has an ID
+        except IntegrityError:
+            db.session.rollback()
+            continue
+        
         users.append(user)
-    db.session.bulk_save_objects(users)
-    db.session.commit()
-    print(f"Seeded {NUM_USERS} users.")
 
-def seed_reviews():
-    users = User.query.all()
+    db.session.commit()
+    print(f"Seeded {len(users)} users.")
+    return users
+
+def seed_skills(users):
+    skills = []
+    for user in users:
+        # Generate skills offered by the user
+        for _ in range(random.randint(1, 5)):  # Random number of skills per user
+            skill = Skill(
+                name=fake.unique.word(), 
+                user_id=user.id
+            )
+            skills.append(skill)
+    
+    db.session.add_all(skills)
+    db.session.commit()
+    print(f"Seeded {len(skills)} skills.")
+    return skills
+
+def seed_skill_requests(users, skills):
+    skill_requests = []
+    for user in users:
+        user_skills = [skill for skill in skills if skill.user_id != user.id]
+        
+        # Create 1-3 skill requests per user
+        for _ in range(random.randint(1, 3)):
+            if user_skills:
+                skill = random.choice(user_skills)
+                skill_request = SkillRequest(
+                    user_id=user.id,
+                    skill_id=skill.id,
+                    description=fake.sentence()
+                )
+                skill_requests.append(skill_request)
+    
+    db.session.add_all(skill_requests)
+    db.session.commit()
+    print(f"Seeded {len(skill_requests)} skill requests.")
+
+def seed_reviews(users):
     reviews = []
     for _ in range(NUM_REVIEWS):
         reviewer = random.choice(users)
+        reviewed = random.choice(users)
+        
+        # Ensure reviewer and reviewed are different
+        while reviewer.id == reviewed.id:
+            reviewed = random.choice(users)
+        
         review = Review(
-            user_id=reviewer.id,
+            user_id=reviewed.id,
             rating=random.randint(1, 5),  # Random rating between 1 and 5
             comment=fake.sentence(),
         )
         reviews.append(review)
+    
     db.session.bulk_save_objects(reviews)
     db.session.commit()
     print(f"Seeded {NUM_REVIEWS} reviews.")
 
-def seed_messages():
-    users = User.query.all()
+def seed_messages(users):
     messages = []
     for _ in range(NUM_MESSAGES):
         sender = random.choice(users)
         receiver = random.choice(users)
-        while receiver.id == sender.id:  # Ensure sender and receiver are different
+        
+        # Ensure sender and receiver are different
+        while receiver.id == sender.id:
             receiver = random.choice(users)
+        
         message = Message(
             sender_id=sender.id,
             receiver_id=receiver.id,
             content=fake.text(max_nb_chars=200),
         )
         messages.append(message)
+    
     db.session.bulk_save_objects(messages)
     db.session.commit()
     print(f"Seeded {NUM_MESSAGES} messages.")
 
-if __name__ == "__main__":
+def main():
     app = create_app()
     with app.app_context():
         print("Seeding the database...")
         db.drop_all()  # Clear the database
         db.create_all()  # Create tables
-        seed_users()
-        seed_reviews()
-        seed_messages()
+        
+        # Seed in a logical order
+        users = seed_users()
+        skills = seed_skills(users)
+        seed_skill_requests(users, skills)
+        seed_reviews(users)
+        seed_messages(users)
+        
         print("Database seeding completed.")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,105 @@
+Metadata-Version: 2.1
+Name: mt5linux
+Version: 0.1.9
+Summary: MetaTrader5 for linux users
+Home-page: https://github.com/lucas-campagna/mt5linux
+Author: Lucas Prett Campagna
+License: MIT
+Platform: UNKNOWN
+Description-Content-Type: text/markdown
+Requires-Dist: bleach (==4.1.0)
+Requires-Dist: certifi (==2021.10.8)
+Requires-Dist: cffi (==1.15.0)
+Requires-Dist: charset-normalizer (==2.0.7)
+Requires-Dist: colorama (==0.4.4)
+Requires-Dist: cryptography (==35.0.0)
+Requires-Dist: docutils (==0.18)
+Requires-Dist: idna (==3.3)
+Requires-Dist: importlib-metadata (==4.8.1)
+Requires-Dist: jeepney (==0.7.1)
+Requires-Dist: keyring (==23.2.1)
+Requires-Dist: numpy (==1.21.4)
+Requires-Dist: packaging (==21.2)
+Requires-Dist: pkginfo (==1.7.1)
+Requires-Dist: plumbum (==1.7.0)
+Requires-Dist: pycparser (==2.21)
+Requires-Dist: Pygments (==2.10.0)
+Requires-Dist: pyparsing (==2.4.7)
+Requires-Dist: readme-renderer (==30.0)
+Requires-Dist: requests (==2.26.0)
+Requires-Dist: requests-toolbelt (==0.9.1)
+Requires-Dist: rfc3986 (==1.5.0)
+Requires-Dist: rpyc (==5.0.1)
+Requires-Dist: SecretStorage (==3.3.1)
+Requires-Dist: six (==1.16.0)
+Requires-Dist: tqdm (==4.62.3)
+Requires-Dist: twine (==3.5.0)
+Requires-Dist: urllib3 (==1.26.7)
+Requires-Dist: webencodings (==0.5.1)
+Requires-Dist: zipp (==3.6.0)
+
+# MetaTrader 5 for linux system
+
+A simple package that use [wine](https://www.winehq.org), [rpyc](https://github.com/tomerfiliba-org/rpyc) and a Python Windows version to allow using [MetaTrader5](https://pypi.org/project/MetaTrader5) on Linux.
+
+## Install
+
+
+1. Install [Wine](https://wiki.winehq.org/Download).
+
+2. Install [Python for Windows](https://www.python.org/downloads/windows/) on Linux with the help of Wine.
+
+3. Find the path to `python.exe`.
+
+    - I installed on `/home/user/.wine/drive_c/users/user/Local Settings/Application Data/Programs/Python/Python39`.
+
+4. Install [mt5](https://www.mql5.com/en/docs/integration/python_metatrader5) library on your **Windows** Python version.
+
+```bash
+pip install MetaTrader5
+pip install --upgrade MetaTrader5
+```
+
+5. Install this package on your **Linux** Python version:
+
+```
+pip install mt5linux
+```
+
+## How To Use
+
+Follow the steps:
+
+1. Open MetaTrader5.
+
+2. On a terminal start the server:
+
+```
+python -m mt5linux <path/to/python.exe>
+```
+
+3. On your script/notebook:
+
+```python
+# import the package
+from mt5linux import MetaTrader5
+# connecto to the server
+mt5 = MetaTrader5(
+    # host = 'localhost' (default)
+    # port = 18812       (default)
+) 
+# use as you learned from: https://www.mql5.com/en/docs/integration/python_metatrader5/
+mt5.initialize()
+mt5.terminal_info()
+mt5.copy_rates_from_pos('VALE3',mt5.TIMEFRAME_M1,0,1000)
+# ...
+# don't forget to shutdown
+mt5.shutdown()
+```
+
+4. Be happy!
+
+
+On step 2 you can provide the port, host, executable, etc... just type `python -m mt5linux --help`.
+
+

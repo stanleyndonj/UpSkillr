@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from flask_bcrypt import Bcrypt
+from datetime import datetime
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -14,10 +15,16 @@ class User(db.Model):
     username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password_hash = db.Column(db.String(128), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
-    skills = db.relationship('Skill', backref='user', lazy=True)
-    skill_requests = db.relationship('SkillRequest', backref='user', lazy=True)
+    skills = db.relationship('Skill', backref='skill_owner', lazy='dynamic', cascade='all, delete-orphan')
+    skill_requests = db.relationship('SkillRequest', backref='request_user', lazy='dynamic', cascade='all, delete-orphan')
+    reviews = db.relationship('Review', backref='reviewed_user', lazy='dynamic', cascade='all, delete-orphan')
+    
+    # Specify the foreign_keys argument to resolve ambiguity
+    messages_sent = db.relationship('Message', foreign_keys='Message.sender_id', backref='sender', lazy='dynamic')
+    messages_received = db.relationship('Message', foreign_keys='Message.receiver_id', backref='receiver', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -34,9 +41,13 @@ class Skill(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Foreign Key
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+
+    # Relationship with SkillRequest
+    skill_requests = db.relationship('SkillRequest', backref='skill', lazy='dynamic', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Skill {self.name}>'
@@ -47,16 +58,40 @@ class SkillRequest(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Foreign Keys
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    skill_id = db.Column(db.Integer, db.ForeignKey('skills.id'), nullable=False)
-
-    # Relationships
-    skill = db.relationship('Skill', backref='skill_requests')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    skill_id = db.Column(db.Integer, db.ForeignKey('skills.id', ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):
         return f'<SkillRequest {self.description}>'
+
+# Review model
+class Review(db.Model):
+    __tablename__ = 'reviews'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Review {self.rating}>'
+
+# Message model
+class Message(db.Model):
+    __tablename__ = 'messages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    content = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Message from {self.sender_id} to {self.receiver_id}>'
 
 # Validators
 @validates('email')
