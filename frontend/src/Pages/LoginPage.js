@@ -1,54 +1,94 @@
-// src /pages/LoginPage.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../axiosConfig';
 import styles from './LoginPage.module.css';
-
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
+
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = 'http://localhost:5000';
 
 function LoginPage() {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { login } = useAuth(); // Import login function from AuthContext
 
     async function handleLogin(event) {
         event.preventDefault();
+        setError('');
+        setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5000/auth/login', { email, password });
-            localStorage.setItem('token', response.data.token);
-            navigate('/profile');//Redirect to profile or another page
+            const response = await axios.post('/auth/login', {
+                username,
+                password
+            }, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            // Store token and user info
+            const { token, user } = response.data;
+            login(user, token); // Update AuthContext state
+
+            // Redirect to profile page
+            navigate('/profile');
         } catch (error) {
-            setError(error.response?.data?.message || 'Login Failed');
+            if (error.response) {
+                setError(error.response.data.error || 'Login Failed');
+            } else {
+                setError('An unexpected error occurred. Please try again.');
+            }
+            console.error('Login error:', error);
+        } finally {
+            setIsLoading(false);
         }
     }
-    
+
     return (
-        <div className = "styles.loginPage">
+        <div className={styles.loginPage}>
             <h2>Login</h2>
             <form onSubmit={handleLogin} className={styles.form}>
-            <input 
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-            <input 
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-            <button type="submit">Login</button>
-            {error && <p className={styles.error}>{error}</p>}
+                <input 
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    disabled={isLoading}
+                />
+                <input 
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={isLoading}
+                />
+                <button 
+                    type="submit"
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Logging in...' : 'Login'}
+                </button>
+
+                {error && <p className={styles.error}>{error}</p>}
+
+                <div className={styles.signup}>
+                    <p>
+                        Don't have an account? 
+                        <span
+                            onClick={() => navigate('/signup')}
+                            className={styles.signupLink}
+                        >
+                            {' '}Sign Up
+                        </span>
+                    </p>
+                </div>
             </form>
         </div>
-    )
+    );
 }
-export default LoginPage;
 
-    // NOTE FOR THE TEAM:
-// - Integrate the form with a post request to '/auth/login' when the backend is ready
-// - Handle the form validation and error messages.
+export default LoginPage;

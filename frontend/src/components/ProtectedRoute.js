@@ -2,11 +2,14 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
-// Simulate user authentication (replace with backend logic)
-    const isAuthenticated = !!localStorage.getItem('token'); 
+  const token = localStorage.getItem('token');
 
-// Redirect to login if not authenticated
-    return isAuthenticated ? children : <Navigate to="/login" />;
+  if (!token) {
+    // Redirect to login if no token is found
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
 };
 
 export default ProtectedRoute;
