@@ -3,6 +3,9 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from models import db, User, Skill, SkillRequest, Review, Message  # Import all models
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+from routes.auth_routes import auth_blueprint
+
 
 # Initialize app and extensions
 app = Flask(__name__)
@@ -10,14 +13,29 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'super_secret_key'
 
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "http://localhost:3000",
+            "http://127.0.0.1:3000"
+        ],
+        "methods": ["OPTIONS", "GET", "POST", "PUT", "DELETE"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
+
 # Initialize db, bcrypt, and migrate
 db.init_app(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 
+# Register blueprints
+app.register_blueprint(auth_blueprint, url_prefix='/auth')
+
 # Create app function (needed for seeding)
 def create_app():
     return app
+
 
 # User registration
 @app.route('/register', methods=['POST'])
