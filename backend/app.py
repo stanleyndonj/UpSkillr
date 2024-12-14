@@ -38,8 +38,8 @@ def create_app():
 
 
 # User registration
-@app.route('/register', methods=['POST'])
-def register():
+@app.route('/signup', methods=['POST'])
+def signup():
     data = request.get_json()
     username, email, password = data.get('username'), data.get('email'), data.get('password')
     if not username or not email or not password:
