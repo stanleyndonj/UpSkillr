@@ -97,6 +97,10 @@ src/
 │   ├── profilepage.js
 ├── app.js
 ├── index.js
+├── axiosConfig.js
+├── AuthContext.js
+├── index.css
+├── app.css
 ```
 
 *Backend*
