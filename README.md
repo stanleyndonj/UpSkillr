@@ -128,7 +128,7 @@ backend
 
 3. Start the development server:
 
-   `npm run dev`
+   `npm start`
 
 4. Go to http://localhost:3000 to open the application.
 
