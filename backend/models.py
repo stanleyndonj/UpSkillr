@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from flask_bcrypt import Bcrypt
 from datetime import datetime
+from sqlalchemy import Column, DateTime
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -89,6 +90,8 @@ class Message(db.Model):
     receiver_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     content = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
 
     def __repr__(self):
         return f'<Message from {self.sender_id} to {self.receiver_id}>'
