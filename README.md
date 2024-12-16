@@ -97,6 +97,10 @@ src/
 │   ├── profilepage.js
 ├── app.js
 ├── index.js
+├── axiosConfig.js
+├── AuthContext.js
+├── index.css
+├── app.css
 ```
 
 *Backend*
@@ -128,7 +132,7 @@ backend
 
 3. Start the development server:
 
-   `npm run dev`
+   `npm start`
 
 4. Go to http://localhost:3000 to open the application.
 

@@ -7,6 +7,7 @@ function ProfilePage() {
     const [error, setError] = useState('');
 
     useEffect(() => {
+<<<<<<< HEAD
     async function fetchProfile() {
         try {
         const token = localStorage.getItem('token');
@@ -18,23 +19,42 @@ function ProfilePage() {
         setError('Failed to fetch profile details. Please try again.');
         }
     }
+=======
+        async function fetchProfile() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) throw new Error('Token is missing. Please log in again.');
+>>>>>>> 0a50b5d294b5cab8bdc98d8d3c218f07e313c491
 
-    fetchProfile();
+                const response = await axios.get('http://localhost:5000/api/profile', {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setUserDetails(response.data);
+            } catch (err) {
+                if (err.response && err.response.data.error) {
+                    setError(err.response.data.error); // Display backend error
+                } else {
+                    setError('Failed to fetch profile details. Please try again.');
+                }
+            }
+        }
+
+        fetchProfile();
     }, []);
 
     return (
-    <div className="profile-container">
-        <h1>Your Profile</h1>
-        {error ? (
-        <p className="error">{error}</p>
-        ) : (
-        <div className="profile-details">
-            <p><strong>Name:</strong> {userDetails.name}</p>
-            <p><strong>Email:</strong> {userDetails.email}</p>
-            <p><strong>Joined:</strong> {userDetails.joinedDate}</p>
+        <div className="profile-container">
+            <h1>Your Profile</h1>
+            {error ? (
+                <p className="error">{error}</p>
+            ) : (
+                <div className="profile-details">
+                    <p><strong>Name:</strong> {userDetails.name}</p>
+                    <p><strong>Email:</strong> {userDetails.email}</p>
+                    <p><strong>Joined:</strong> {userDetails.joinedDate}</p>
+                </div>
+            )}
         </div>
-        )}
-    </div>
     );
 }
 
