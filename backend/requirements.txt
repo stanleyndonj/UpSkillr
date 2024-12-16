@@ -25,10 +25,9 @@ Flask-Migrate==4.0.7
 Flask-SocketIO==5.4.1
 Flask-SQLAlchemy==3.1.1
 greenlet==3.1.1
-gunicorn==23.0.0
 h11==0.14.0
 idna==3.3
-importlib-metadata==4.8.1
+importlib_metadata==8.5.0
 importlib_resources==6.4.5
 iniconfig==2.0.0
 ipdb==0.13.13
@@ -44,7 +43,7 @@ marshmallow==3.22.0
 matplotlib-inline==0.1.7
 mt5linux==0.1.9
 numpy==1.21.4
-packaging==21.2
+packaging==24.2
 pandas==2.0.3
 parso==0.8.4
 pexpect==4.9.0
@@ -85,4 +84,4 @@ wcwidth==0.2.13
 webencodings==0.5.1
 Werkzeug==3.0.6
 wsproto==1.2.0
-zipp==3.6.0
+zipp==3.20.2
