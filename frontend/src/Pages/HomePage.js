@@ -1,14 +1,14 @@
 import React from 'react';
 import './HomePage.css'; // Styling for the homepage
-import logo from '/home/esther/UpSkillr/frontend/src/Pages/assets/UpSkillr Logo.png'; // Import the logo
-import communityImage from '/home/esther/UpSkillr/frontend/src/Pages/assets/pexels-rdne-7551442.jpg'; // Add a community section image
-import communityImage1 from '/home/esther/UpSkillr/frontend/src/Pages/assets/desola-lanre-ologun-IgUR1iX0mqM-unsplash.jpg'; // Add a community section image
-import commmunityImage2 from '/home/esther/UpSkillr/frontend/src/Pages/assets/collaboration2.jpg';
-import communityImage3 from '/home/esther/UpSkillr/frontend/src/Pages/assets/collaboration3.jpg';
-import uniqueIcon1 from '/home/esther/UpSkillr/frontend/src/Pages/assets/profile.gif'; // Add icons for each unique feature
-import uniqueIcon2 from '/home/esther/UpSkillr/frontend/src/Pages/assets/skills matching.png';
-import uniqueIcon3 from '/home/esther/UpSkillr/frontend/src/Pages/assets/chat.gif';
-import uniqueIcon4 from '/home/esther/UpSkillr/frontend/src/Pages/assets/trophy.gif';
+import logo from './assets/UpSkillr Logo.png'; // Import the logo
+import communityImage from './assets/pexels-rdne-7551442.jpg'; // Add a community section image
+import communityImage1 from './assets/desola-lanre-ologun-IgUR1iX0mqM-unsplash.jpg'; // Add a community section image
+import commmunityImage2 from './assets/collaboration2.jpg';
+import communityImage3 from './assets/collaboration3.jpg';
+import uniqueIcon1 from './assets/profile.gif'; // Add icons for each unique feature
+import uniqueIcon2 from './assets/skills matching.png';
+import uniqueIcon3 from './assets/chat.gif';
+import uniqueIcon4 from './assets/trophy.gif';
 
 const HomePage = () => {
     return (
