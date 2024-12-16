@@ -7,10 +7,24 @@ function ProfilePage() {
     const [error, setError] = useState('');
 
     useEffect(() => {
+<<<<<<< HEAD
+    async function fetchProfile() {
+        try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/auth/profile', {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        setUserDetails(response.data);
+        } catch (err) {
+        setError('Failed to fetch profile details. Please try again.');
+        }
+    }
+=======
         async function fetchProfile() {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) throw new Error('Token is missing. Please log in again.');
+>>>>>>> 0a50b5d294b5cab8bdc98d8d3c218f07e313c491
 
                 const response = await axios.get('http://localhost:5000/api/profile', {
                     headers: { Authorization: `Bearer ${token}` },

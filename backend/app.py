@@ -49,9 +49,19 @@ def profile():
         response.status_code = 200
         return response 
 
+<<<<<<< HEAD
+# User registration
+@app.route('/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    username, email, password = data.get('username'), data.get('email'), data.get('password')
+    if not username or not email or not password:
+        return jsonify({'error': 'Missing required fields'}), 400
+=======
     auth_header = request.headers.get('Authorization')
     if not auth_header:
         return jsonify({'error': 'Missing token'}), 401 
+>>>>>>> 0a50b5d294b5cab8bdc98d8d3c218f07e313c491
 
     token = auth_header.split(" ")[1]
     try:
