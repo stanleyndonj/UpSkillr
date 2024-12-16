@@ -3,6 +3,7 @@ bidict==0.23.1
 blinker==1.8.2
 click==8.1.7
 Flask==3.0.3
+flask-bcrypt==1.0.1
 Flask-Migrate==4.0.7
 Flask-SocketIO==5.4.1
 Flask-SQLAlchemy==3.1.1
