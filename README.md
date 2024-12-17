@@ -191,7 +191,7 @@ Select your GitHub repository and name the service.
 
 *3. Deployment*
 
-Your project will be built automatically by Render. After finishing, you will receive a live URL, such as https://your-service.onrender.com.
+(https://upskillr-1-9xow.onrender.com/)
 
 *4. Update Changes*
 
