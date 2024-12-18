@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Set default configuration for Axios
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'https://upskillr-nis2.onrender.com';
 axios.defaults.withCredentials = true;
 
 // Add an interceptor to include the token in requests

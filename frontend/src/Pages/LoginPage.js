@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'https://upskillr-nis2.onrender.com';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
