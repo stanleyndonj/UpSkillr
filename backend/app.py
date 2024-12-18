@@ -17,8 +17,8 @@ app.config['SECRET_KEY'] = 'super_secret_key'
 # More comprehensive CORS configuration
 CORS(app, resources={r"/*": {
     "origins": [
-        "http://localhost:3000", 
-        "http://127.0.0.1:3000"
+        "https://upskillr-nis2.onrender.com", 
+        "https://upskillr-nis2.onrender.com"
     ],
     "methods": ["OPTIONS", "GET", "POST", "PUT", "DELETE"],
     "allow_headers": ["Content-Type", "Authorization"],
@@ -42,7 +42,7 @@ def create_app():
 def profile():
     if request.method == 'OPTIONS':
         response = make_response()
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://upskillr-nis2.onrender.com')
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         response.headers.add('Access-Control-Allow-Methods', 'GET, OPTIONS')
         response.headers.add('Access-Control-Allow-Credentials', 'true')  # New line
