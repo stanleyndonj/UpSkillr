@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'https://upskillr-nis2.onrender.com';
+axios.defaults.baseURL = 'http://localhost:5000';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -17,38 +17,32 @@ function LoginPage() {
 
     async function handleLogin(event) {
         event.preventDefault();
-        setError(''); // Clear any previous error messages
-        setIsLoading(true); // Set loading state
+        setError('');
+        setIsLoading(true);
 
         try {
-            // Ensure the correct headers and body format
-            const response = await axios.post(
-                '/login', 
-                {
-                    username, 
-                    password
-                }, 
-                {
-                    headers: { 'Content-Type': 'application/json' }  // Explicitly set the Content-Type to application/json
-                }
-            );
+            const response = await axios.post('/auth/login', {
+                username,
+                password
+            }, {
+                headers: { 'Content-Type': 'application/json' }
+            });
 
-            // Handle successful login
+            // Store token and user info
             const { token, user } = response.data;
-            login(user, token); // Update AuthContext with user and token
+            login(user, token); // Update AuthContext state
 
             // Redirect to profile page
             navigate('/profile');
         } catch (error) {
-            // Handle errors (e.g., invalid credentials)
             if (error.response) {
-                setError(error.response.data.error || 'Login Failed'); // Display specific error message
+                setError(error.response.data.error || 'Login Failed');
             } else {
-                setError('An unexpected error occurred. Please try again.'); // General error
+                setError('An unexpected error occurred. Please try again.');
             }
             console.error('Login error:', error);
         } finally {
-            setIsLoading(false); // Reset loading state after request
+            setIsLoading(false);
         }
     }
 
