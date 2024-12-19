@@ -17,32 +17,38 @@ function LoginPage() {
 
     async function handleLogin(event) {
         event.preventDefault();
-        setError('');
-        setIsLoading(true);
+        setError(''); // Clear any previous error messages
+        setIsLoading(true); // Set loading state
 
         try {
-            const response = await axios.post('/auth/login', {
-                username,
-                password
-            }, {
-                headers: { 'Content-Type': 'application/json' }
-            });
+            // Ensure the correct headers and body format
+            const response = await axios.post(
+                '/auth/login', 
+                {
+                    username, 
+                    password
+                }, 
+                {
+                    headers: { 'Content-Type': 'application/json' }  // Explicitly set the Content-Type to application/json
+                }
+            );
 
-            // Store token and user info
+            // Handle successful login
             const { token, user } = response.data;
-            login(user, token); // Update AuthContext state
+            login(user, token); // Update AuthContext with user and token
 
             // Redirect to profile page
             navigate('/profile');
         } catch (error) {
+            // Handle errors (e.g., invalid credentials)
             if (error.response) {
-                setError(error.response.data.error || 'Login Failed');
+                setError(error.response.data.error || 'Login Failed'); // Display specific error message
             } else {
-                setError('An unexpected error occurred. Please try again.');
+                setError('An unexpected error occurred. Please try again.'); // General error
             }
             console.error('Login error:', error);
         } finally {
-            setIsLoading(false);
+            setIsLoading(false); // Reset loading state after request
         }
     }
 
