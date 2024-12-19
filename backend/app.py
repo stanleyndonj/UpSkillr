@@ -1,11 +1,10 @@
-### app.py ###
 from flask import Flask, jsonify, request, session, make_response
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
+from flask_socketio import SocketIO, emit  # Import Flask-SocketIO
 from models import db, User, Skill
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from routes.auth_routes import auth_blueprint
 import jwt
 
 # Initialize app and extensions
@@ -14,22 +13,24 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'super_secret_key'
 
+# Initialize SocketIO
+socketio = SocketIO(app, cors_allowed_origins="*")  # Allow all origins for WebSocket connections
+
 # More comprehensive CORS configuration
 CORS(app, resources={r"/*": {
     "origins": [
         "https://upskillr-nis2.onrender.com", 
-        "https://upskillr-nis2.onrender.com"
+        "https://upskillr-1-9xow.onrender.com"  # Ensure both front-end URLs are allowed
     ],
     "methods": ["OPTIONS", "GET", "POST", "PUT", "DELETE"],
     "allow_headers": ["Content-Type", "Authorization"],
-    "supports_credentials": True  # New line
+    "supports_credentials": True  # Enable support for credentials (cookies)
 }})
 
 # Initialize db, bcrypt, and migrate
 db.init_app(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
-
 
 # Create app function (needed for seeding)
 def create_app():
@@ -39,17 +40,18 @@ def create_app():
 @app.route('/api/profile', methods=['GET', 'OPTIONS'])
 def profile():
     if request.method == 'OPTIONS':
+        # Pre-flight response for CORS
         response = make_response()
-        response.headers.add('Access-Control-Allow-Origin', 'https://upskillr-nis2.onrender.com')
+        response.headers.add('Access-Control-Allow-Origin', 'https://upskillr-1-9xow.onrender.com')
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         response.headers.add('Access-Control-Allow-Methods', 'GET, OPTIONS')
-        response.headers.add('Access-Control-Allow-Credentials', 'true')  # New line
+        response.headers.add('Access-Control-Allow-Credentials', 'true')  # Ensure credentials are allowed
         response.status_code = 200
-        return response 
+        return response
 
     auth_header = request.headers.get('Authorization')
     if not auth_header:
-        return jsonify({'error': 'Missing token'}), 401 
+        return jsonify({'error': 'Missing token'}), 401
 
     token = auth_header.split(" ")[1]
     try:
@@ -92,7 +94,19 @@ def logout():
     session.clear()
     return jsonify({'message': 'Logged out successfully'}), 200
 
+# Socket.IO event to handle a message from the client
+@socketio.on('message')
+def handle_message(data):
+    print("Received message:", data)
+    emit('response', {'message': 'Message received!'})
+
+# Socket.IO event to handle a custom event
+@socketio.on('custom_event')
+def handle_custom_event(data):
+    print("Received custom event data:", data)
+    emit('custom_response', {'message': 'Custom event received!'})
+
 if __name__ == '__main__':
     # Ensure the app context is pushed for CLI operations
     with app.app_context():
-        app.run(debug=True, host='0.0.0.0', port=5000)
+        socketio.run(app, debug=True, host='0.0.0.0', port=5000)  # Use socketio.run instead of app.run
