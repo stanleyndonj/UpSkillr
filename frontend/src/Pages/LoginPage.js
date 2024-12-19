@@ -23,7 +23,7 @@ function LoginPage() {
         try {
             // Ensure the correct headers and body format
             const response = await axios.post(
-                '/auth/login', 
+                '/login', 
                 {
                     username, 
                     password

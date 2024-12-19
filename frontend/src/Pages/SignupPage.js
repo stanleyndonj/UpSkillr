@@ -13,7 +13,7 @@ function SignupPage() {
     async function handleSignup(event) {
         event.preventDefault();
         try {
-            await axios.post('https://upskillr-nis2.onrender.com/auth/signup', { username, email, password });
+            await axios.post('https://upskillr-nis2.onrender.com/signup', { username, email, password });
             navigate('/login'); // Redirect to login or another page
         } catch (error) {
             setError(error.response?.data?.error || 'Signup Failed');

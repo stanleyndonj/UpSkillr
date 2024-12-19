@@ -30,8 +30,6 @@ db.init_app(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 
-# Register blueprints
-app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
 # Create app function (needed for seeding)
 def create_app():
