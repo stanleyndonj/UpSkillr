@@ -15,32 +15,44 @@ def find_matches(user_id):
     
     try:
         # Fetch the user from the database
-        user = User.query.get(user_id)
-        if not user:
-            return jsonify({"error": "User not found."}), 404
+        user = User.query.get_or_404(user_id)
         
-        # Check if user has skills_requested
-        if not user.skills_requested:
-            return jsonify({"error": "User has no skills requested specified."}), 400
+        # Fetch skill requests made by the user
+        skill_requests = SkillRequest.query.filter_by(user_id=user_id).all()
         
-        # Split skills by comma, strip whitespace, and ignore empty entries
-        requested_skills = [skill.strip() for skill in user.skills_requested.split(',') if skill.strip()]
+        if not skill_requests:
+            return jsonify({"error": "User has no skill requests."}), 400
         
-        # If no valid skills, return an error
-        if not requested_skills:
-            return jsonify({"error": "No valid skills found."}), 400
+        # Extract skill IDs from the user's requests
+        requested_skill_ids = [req.skill_id for req in skill_requests]
         
-        # Temporarily add generic matches for testing purposes
-        generic_matches = [
-            {"id": i, "username": f"TestUser{i}", "skills_offered": "SkillA, SkillB"} for i in range(1, 11)
+        if not requested_skill_ids:
+            return jsonify({"error": "No valid skills requested."}), 400
+        
+        # Find users offering the requested skills
+        matches = (
+            User.query.join(Skill, Skill.user_id == User.id)
+            .filter(Skill.id.in_(requested_skill_ids), User.id != user_id)
+            .distinct()
+            .paginate(page=page, per_page=per_page, error_out=False)
+        )
+        
+        # Format the matches
+        match_list = [
+            {
+                "id": match.id,
+                "username": match.username,
+                "skills_offered": [skill.name for skill in match.skills],
+            }
+            for match in matches.items
         ]
         
-        # Return the generic matches and pagination info
+        # Return the matches with pagination info
         return jsonify({
-            "matches": generic_matches,
-            "total_matches": len(generic_matches),
+            "matches": match_list,
+            "total_matches": matches.total,
             "page": page,
-            "per_page": per_page
+            "per_page": per_page,
         }), 200
     
     except Exception as e:
