@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from '../axiosConfig'; //refused to work a couple of times so i opted for sample sata for now
+//import axios from '../axiosConfig'; //refused to work a couple of times so i opted for sample sata for now
 import { useAuth } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
 
