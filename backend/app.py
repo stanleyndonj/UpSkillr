@@ -132,6 +132,18 @@ def logout():
     session.clear()
     return jsonify({'message': 'Logged out successfully'}), 200
 
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = 'https://upskillr-1-9xow.onrender.com'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Access-Control-Allow-Origin'
+    return response
+
+
+app.use(CORS)
+
 if __name__ == '__main__':
     # Ensure the app context is pushed for CLI operations
     with app.app_context():

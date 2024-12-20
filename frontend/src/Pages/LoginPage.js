@@ -27,7 +27,16 @@ function LoginPage() {
             }, {
                 headers: { 'Content-Type': 'application/json' }
             });
-
+            axios.post('/auth/login', {
+                username,
+                password
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true 
+            });
+            
             
             const { token, user } = response.data;
             login(user, token); 

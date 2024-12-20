@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-// Set default configuration for Axios
 axios.defaults.baseURL = 'https://upskillr-nis2.onrender.com';
 axios.defaults.withCredentials = true;
 
-// Create axios instance with updated baseURL
 const instance = axios.create({
     baseURL: 'https://upskillr-nis2.onrender.com',
     withCredentials: true,
@@ -21,9 +19,7 @@ instance.interceptors.request.use(
             config.headers['Authorization'] = `Bearer ${token}`;
         }
         // Add CORS headers
-        config.headers['Access-Control-Allow-Origin'] = 'https://upskillr-1-9xow.onrender.com';
-        return config;
-    },
+       },
     error => {
         return Promise.reject(error);
     }
