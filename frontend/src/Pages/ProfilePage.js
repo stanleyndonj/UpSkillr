@@ -13,7 +13,7 @@ function ProfilePage() {
                 const token = localStorage.getItem('token');
                 if (!token) throw new Error('Token is missing. Please log in again.');
 
-                const response = await axios.get('http://localhost:5000/api/profile', {
+                const response = await axios.get('https://upskillr-nis2.onrender.com/api/profile', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setUserDetails(response.data);

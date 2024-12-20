@@ -21,7 +21,7 @@ app.config['SECRET_KEY'] = 'super_secret_key'
 
 # Configure CORS
 CORS(app, resources={r"/*": {
-    "origins": ["http://localhost:3000", "http://127.0.0.1:3000"],
+    "origins": ["https://upskillr-1-9xow.onrender.com"],  
     "methods": ["OPTIONS", "GET", "POST", "PUT", "DELETE"],
     "allow_headers": ["Content-Type", "Authorization"],
     "supports_credentials": True
@@ -48,13 +48,13 @@ def create_app():
 # Default OPTIONS response handler
 @app.before_request
 def handle_options_request():
-    if request.method == "OPTIONS":
-        response = make_response()
-        response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin", "")
-        response.headers["Access-Control-Allow-Methods"] = "OPTIONS, GET, POST, PUT, DELETE"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-        response.headers["Access-Control-Allow-Credentials"] = "true"
-        return response, 200
+        if request.method == "OPTIONS":
+           response = make_response()
+           response.headers["Access-Control-Allow-Origin"] = "https://upskillr-1-9xow.onrender.com"
+           response.headers["Access-Control-Allow-Methods"] = "OPTIONS, GET, POST, PUT, DELETE"
+           response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+           response.headers["Access-Control-Allow-Credentials"] = "true"
+           return response, 200
 
 # Profile endpoint
 @app.route('/api/profile', methods=['GET'])
