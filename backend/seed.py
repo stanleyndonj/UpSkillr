@@ -11,20 +11,18 @@ fake = Faker()
 NUM_USERS = 50
 NUM_REVIEWS = 100
 NUM_MESSAGES = 200
+COMMON_SKILLS = ["Python", "React", "Flask", "JavaScript", "Node.js", "Data Analysis", "UI/UX Design"]
 
 def seed_users():
     users = []
     for _ in range(NUM_USERS):
-        # Create the user first
         user = User(
             username=fake.unique.user_name(),
             email=fake.unique.email(),
         )
         user.set_password(fake.password())
         
-        # Add user to the session
         db.session.add(user)
-        
         try:
             db.session.flush()  # Ensure user has an ID
         except IntegrityError:
@@ -40,10 +38,11 @@ def seed_users():
 def seed_skills(users):
     skills = []
     for user in users:
-        # Generate skills offered by the user
-        for _ in range(random.randint(1, 5)):  # Random number of skills per user
+        # Assign common skills to ensure overlap
+        offered_skills = random.sample(COMMON_SKILLS, random.randint(1, 5))
+        for skill_name in offered_skills:
             skill = Skill(
-                name=fake.unique.word(), 
+                name=skill_name,
                 user_id=user.id
             )
             skills.append(skill)
@@ -56,15 +55,15 @@ def seed_skills(users):
 def seed_skill_requests(users, skills):
     skill_requests = []
     for user in users:
-        user_skills = [skill for skill in skills if skill.user_id != user.id]
+        user_skills = [skill for skill in skills if skill.user_id != user.id]  # Avoid self-referencing skills
         
         # Create 1-3 skill requests per user
         for _ in range(random.randint(1, 3)):
             if user_skills:
-                skill = random.choice(user_skills)
+                skill = random.choice(user_skills)  # Pick a skill from another user
                 skill_request = SkillRequest(
                     user_id=user.id,
-                    skill_id=skill.id,
+                    skill_id=skill.id,  # Assign a valid skill ID
                     description=fake.sentence()
                 )
                 skill_requests.append(skill_request)
@@ -79,13 +78,12 @@ def seed_reviews(users):
         reviewer = random.choice(users)
         reviewed = random.choice(users)
         
-        # Ensure reviewer and reviewed are different
         while reviewer.id == reviewed.id:
             reviewed = random.choice(users)
         
         review = Review(
             user_id=reviewed.id,
-            rating=random.randint(1, 5),  # Random rating between 1 and 5
+            rating=random.randint(1, 5),
             comment=fake.sentence(),
         )
         reviews.append(review)
@@ -100,7 +98,6 @@ def seed_messages(users):
         sender = random.choice(users)
         receiver = random.choice(users)
         
-        # Ensure sender and receiver are different
         while receiver.id == sender.id:
             receiver = random.choice(users)
         
@@ -124,12 +121,13 @@ def main():
         
         # Seed in a logical order
         users = seed_users()
-        skills = seed_skills(users)
-        seed_skill_requests(users, skills)
+        skills = seed_skills(users)  # Generate skills for the users
+        seed_skill_requests(users, skills)  # Pass both users and skills here
         seed_reviews(users)
         seed_messages(users)
         
         print("Database seeding completed.")
+
 
 if __name__ == "__main__":
     main()
