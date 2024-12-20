@@ -5,8 +5,11 @@ import jwt
 import datetime
 import re
 from flask import current_app
+from flask_cors import CORS
 
 auth_blueprint = Blueprint('auth', __name__)
+CORS(auth_blueprint, supports_credentials=True, origins=['https://upskillr-1-9xow.onrender.com'])
+
 
 def validate_email(email):
     email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'

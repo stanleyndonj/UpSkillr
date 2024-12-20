@@ -13,7 +13,7 @@ function LoginPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { login } = useAuth(); // Import login function from AuthContext
+    const { login } = useAuth(); 
 
     async function handleLogin(event) {
         event.preventDefault();
@@ -28,11 +28,11 @@ function LoginPage() {
                 headers: { 'Content-Type': 'application/json' }
             });
 
-            // Store token and user info
+            
             const { token, user } = response.data;
-            login(user, token); // Update AuthContext state
+            login(user, token); 
 
-            // Redirect to profile page
+            
             navigate('/profile');
         } catch (error) {
             if (error.response) {
