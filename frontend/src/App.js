@@ -4,6 +4,7 @@ import { AuthProvider } from './AuthContext';
 import Navbar from './components/Navbar'; 
 
 
+
 // Pages
 import HomePage from './Pages/HomePage.js';
 import LoginPage from './Pages/LoginPage';

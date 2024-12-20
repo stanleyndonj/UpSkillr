@@ -24,7 +24,9 @@ function ProfilePage() {
 
     return (
     <div className="profile-container">
+        
         <h1>Your Profile</h1>
+        
         {error ? (
         <p className="error">{error}</p>
         ) : (

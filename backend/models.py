@@ -17,6 +17,8 @@ class User(db.Model):
     email = db.Column(db.String(120), nullable=False, unique=True)
     password_hash = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    skills_offered = db.Column(db.Text, nullable=True)
+    skills_requested = db.Column(db.Text, nullable=True)
 
     # Relationships
     skills = db.relationship('Skill', backref='skill_owner', lazy='dynamic', cascade='all, delete-orphan')
@@ -90,8 +92,6 @@ class Message(db.Model):
     receiver_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     content = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    timestamp = Column(DateTime, default=datetime.utcnow)
-
 
     def __repr__(self):
         return f'<Message from {self.sender_id} to {self.receiver_id}>'

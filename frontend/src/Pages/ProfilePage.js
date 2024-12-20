@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ProfilePage.css';
+import AIAssistant from '../components/AIAssistant';
 
 function ProfilePage() {
     const [userDetails, setUserDetails] = useState({});
@@ -31,6 +32,7 @@ function ProfilePage() {
     return (
         <div className="profile-container">
             <h1>Your Profile</h1>
+            <AIAssistant />
             {error ? (
                 <p className="error">{error}</p>
             ) : (
