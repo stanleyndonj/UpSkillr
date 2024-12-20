@@ -14,22 +14,26 @@ def find_matches(user_id):
     per_page = min(per_page, 100)
     
     try:
+        # Fetch the user from the database
         user = User.query.get_or_404(user_id)
         
+        # Check if user has skills_requested
         if not user.skills_requested:
             return jsonify({"error": "User has no skills requested specified."}), 400
         
-        # Split skills and handle potential empty or None values
+        # Split skills by comma, strip whitespace, and ignore empty entries
         requested_skills = [skill.strip() for skill in user.skills_requested.split(',') if skill.strip()]
         
+        # If no valid skills, return an error
         if not requested_skills:
             return jsonify({"error": "No valid skills found."}), 400
         
-        # More robust matching with case-insensitive search
+        # Perform a case-insensitive match for skills offered
         matches = User.query.filter(
-            func.lower(User.skills_offered).in_([skill.lower() for skill in requested_skills])
+            func.lower(User.skills_offered).in_([func.lower(skill) for skill in requested_skills])
         ).paginate(page=page, per_page=per_page, error_out=False)
         
+        # Format the matches to return relevant data
         match_list = [
             {
                 "id": match.id, 
@@ -38,6 +42,7 @@ def find_matches(user_id):
             } for match in matches.items
         ]
         
+        # Return the matches with pagination info
         return jsonify({
             "matches": match_list,
             "total_matches": matches.total,
@@ -46,4 +51,5 @@ def find_matches(user_id):
         }), 200
     
     except Exception as e:
+        # Log the error and return a generic message to the client
         return jsonify({"error": "Match search failed", "details": str(e)}), 500
