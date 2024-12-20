@@ -142,8 +142,6 @@ def add_cors_headers(response):
     return response
 
 
-app.use(CORS)
-
 if __name__ == '__main__':
     # Ensure the app context is pushed for CLI operations
     with app.app_context():
