@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import axios from '../axiosConfig';
+import axios from '../axiosConfig'; // Use the configured axios instance
 import styles from './LoginPage.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'https://upskillr-nis2.onrender.com';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -23,25 +20,12 @@ function LoginPage() {
         try {
             const response = await axios.post('/auth/login', {
                 username,
-                password
-            }, {
-                headers: { 'Content-Type': 'application/json' }
+                password,
             });
-            axios.post('/auth/login', {
-                username,
-                password
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                withCredentials: true 
-            });
-            
             
             const { token, user } = response.data;
             login(user, token); 
 
-            
             navigate('/profile');
         } catch (error) {
             if (error.response) {
