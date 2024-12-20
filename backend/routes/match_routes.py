@@ -6,7 +6,7 @@ match_blueprint = Blueprint('match', __name__)
 
 @match_blueprint.route('/match/<int:user_id>', methods=['GET'])
 def find_matches(user_id):
-    # Get pagination parameters
+    print(f"Request received for user_id: {user_id}")
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
     

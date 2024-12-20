@@ -11,6 +11,7 @@ from routes.ai_routes import ai_routes
 print("ai_routes imported successfully")
 from openai import OpenAI
 from config import Config
+from routes.match_routes import match_blueprint
 
 
 # Initialize app and extensions
@@ -34,6 +35,7 @@ bcrypt = Bcrypt(app)
 
 # Register blueprints
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
+app.register_blueprint(match_blueprint, url_prefix='/match')
 app.register_blueprint(ai_routes)
 
 
